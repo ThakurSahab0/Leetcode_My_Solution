@@ -1,27 +1,29 @@
 class Solution {
-          public int minDifficulty(int[] jobDifficulty, int d) {
-        int len = jobDifficulty.length;
-        if (d > len) return -1;
-        int[][] minDifficulty = new int[d][len];
-        for (int i = 1; i < d; i++) {
-            Arrays.fill(minDifficulty[i], Integer.MAX_VALUE);
+    public int minDifficulty(int[] jobs, int d) {
+        int n = jobs.length;
+        if(d > n) return -1;
+        int[][]dp = new int[d][n];
+        int maxAll = 0;
+        for(int i = 0; i < n; ++i){
+            maxAll = Math.max(maxAll, jobs[i]);
+            dp[0][i] = maxAll;
         }
-        int maxDifficulty = 0;
-        for (int i = 0; i <= len - d; i++) {
-            maxDifficulty = Math.max(maxDifficulty, jobDifficulty[i]);
-            minDifficulty[0][i] = maxDifficulty;
-        }
-        for (int day = 1; day < d; day++) {
-            for (int to = day; to <= len - d + day; to++) {
-                int currentDayDifficulty = jobDifficulty[to];
-                int result = Integer.MAX_VALUE;
-                for (int j = to - 1; j >= day - 1; j--) {
-                    result = Math.min(result, minDifficulty[day - 1][j] + currentDayDifficulty);
-                    currentDayDifficulty = Math.max(currentDayDifficulty, jobDifficulty[j]);
+        
+        for(int i = 1; i < d; i++){
+            for(int j = i; j < n; j++){
+                
+                int min = dp[i - 1][j - 1] + jobs[j];
+                int max = jobs[j];
+                
+                for(int k = j; k >= i; k--){
+                    max = Math.max(max, jobs[k]);
+                    min = Math.min(min, dp[i - 1][k - 1] + max);
                 }
-                minDifficulty[day][to] = result;
-            }   
+                
+                dp[i][j] = min;
+            }
         }
-        return minDifficulty[d - 1][len - 1];
+        
+        return dp[d - 1][n - 1];
     }
-    }
+}
