@@ -14,14 +14,13 @@ class Solution {
         {
             if(nums[i]!=0)
             {
-                nums[count++]=nums[i];
-                // nums[n-count]=0;
+                int temp=nums[count];
+				nums[count] = nums[i];
+				nums[i]= temp;
+				count++;
             }
         }
-        for(int i=count;i<n;i++)
-        {
-            nums[i]=0;
-        }
         return nums;
+        
     }
 }
